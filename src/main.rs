@@ -10,12 +10,12 @@ struct ServingValues {
 
 #[get("/")]
 fn index() -> content::Html<Vec<u8>> {
-    let index = std::fs::read("static/index.html");
+    let index = std::fs::read("index.html");
     let index = match index {
         Ok(file) => file,
         Err(e) => match e.kind() {
             std::io::ErrorKind::NotFound => {
-                warn!("cannot find \"index.html\" in \"static\" directory");
+                error!("cannot find \"index.html\". Have you created it?");
                 return content::Html(String::from(
                     "<b>index.html</b> is missing! Check server logs for more information.",
                 ).as_bytes().to_vec());
@@ -41,7 +41,7 @@ fn latest_version(user_version: String) -> String {
             other_error => panic!("Error occured whilst opening file: {:?}", other_error)
         }
     };
-    
+
     let values: ServingValues = toml::from_str(&values_file).unwrap();
     
     if user_version == values.latest_version {
