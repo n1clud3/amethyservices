@@ -1,3 +1,3 @@
-# nicludepot
+# AmethyServices
 
-n1clud3's programming sandbox
+API for Amethystia

@@ -1,7 +1,12 @@
 #[macro_use]
 extern crate rocket;
 
-use rocket::{response::content, fs::FileServer};
+use rocket::{response::content};
+
+#[derive(serde::Deserialize)]
+struct ServingValues {
+    latest_version: String
+}
 
 #[get("/")]
 fn index() -> content::Html<Vec<u8>> {
@@ -22,47 +27,34 @@ fn index() -> content::Html<Vec<u8>> {
     content::Html(index)
 }
 
-// #[get("/assets/<file>")]
-// fn assets_css(file: String) -> content::Css<Vec<u8>> {
-//     let requested_file = std::fs::read(format!("frontend/assets/{}", file));
-//     let requested_file = match requested_file {
-//         Ok(file) => file,
-//         Err(e) => match e.kind() {
-//             std::io::ErrorKind::NotFound => {
-//                 warn!("cannot find requested file");
-//                 return content::Css(String::from(
-//                     "/* Requested file not found */"
-//                 ).as_bytes().to_vec())
-//             },
-//             other_error => panic!("Problem opening file: {:?}", other_error),
-//         },
-//     };
-
-//     content::Css(requested_file)
-// }
-
-// #[get("/assets/<file>.js", rank=1)]
-// fn assets_js(file: String) -> content::JavaScript<Vec<u8>> {
-//     let requested_file = std::fs::read(format!("frontend/assets/{}", file));
-//     let requested_file = match requested_file {
-//         Ok(file) => file,
-//         Err(e) => match e.kind() {
-//             std::io::ErrorKind::NotFound => {
-//                 warn!("cannot find requested file");
-//                 return content::JavaScript(String::from(
-//                     "// Requested file not found"
-//                 ).as_bytes().to_vec())
-//             },
-//             other_error => panic!("Problem opening file: {:?}", other_error),
-//         },
-//     };
-
-//     content::JavaScript(requested_file)
-// }
+#[get("/lver/<user_version>")]
+fn latest_version(user_version: String) -> String {
+    // Gather values from values.toml
+    let values_file = std::fs::read_to_string("values.toml");
+    let values_file = match values_file {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            std::io::ErrorKind::NotFound => {
+                error!("Could not find \"values.toml\". Have you created it?");
+                return String::from("Latest version: unknown. Error occured on server.")
+            }
+            other_error => panic!("Error occured whilst opening file: {:?}", other_error)
+        }
+    };
+    
+    let values: ServingValues = toml::from_str(&values_file).unwrap();
+    
+    if user_version == values.latest_version {
+        return format!("Latest version: {}. You're running the latest version!", values.latest_version)
+    } else {
+        return format!("Latest version: {}. You're running {}. Consider updating modpack.", values.latest_version, user_version)
+    }
+    
+}
 
 #[launch]
 fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index])
-        .mount("/assets", FileServer::from("static/assets")) // loads resources required by the frontend
+        .mount("/api/v1/", routes![latest_version])
 }
