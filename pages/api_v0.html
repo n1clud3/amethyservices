@@ -1,0 +1,54 @@
+<!-- The links are preconfigured to use with server software like nginx -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/global.css">
+    <link rel="stylesheet" href="/assets/header.css">
+    <title>api v0 ~ nicludepot</title>
+</head>
+<body>
+    <nav>
+        <div class="links"><a href="/">Home</a><a href="/amethystia/api">Amethystia API</a></div>
+    </nav>
+
+    <header>
+        <div class="heading">Amethystia API v0</div>
+        <div class="subheading">Documentation of the <code>/api/v0</code> route</div>
+    </header>
+
+    <main>
+        <p>
+            Functions:
+            <ul>
+                <li>
+                    <code>/checkversion/&lt;user_version&gt;</code> - Get latest version of modpack and compare
+                    it to client's reported version.<br>
+                    Responses:
+                    <ul>
+                        <li>
+                            if <code>&lt;user_version&gt;</code> is equal to server's value, server will respond
+                            with it's value:
+                            <code>0.1.0-alpha</code>
+                        </li>
+                        <li>
+                            if <code>&lt;user_version&gt;</code> is not equal to the server's value, server will respond
+                            with it's value and notice user to update the modpack:
+                            <code>0.1.0-alpha. Consider updating modpack!</code>
+                        </li>
+                    </ul>
+                    
+                </li>
+            </ul>
+        </p>
+    </main>
+
+    <footer>
+        Made with ❤️ by n1clud3<br>
+        <a href="https://github.com/n1clud3">GitHub</a>
+    </footer>
+</body>
+</html>
