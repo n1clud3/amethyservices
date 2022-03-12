@@ -36,7 +36,7 @@ fn latest_version(user_version: String) -> String {
         Err(error) => match error.kind() {
             std::io::ErrorKind::NotFound => {
                 error!("Could not find \"values.toml\". Have you created it?");
-                return String::from("Latest version: unknown. Error occured on server.")
+                return String::from("unknown. Error occured on server.")
             }
             other_error => panic!("Error occured whilst opening file: {:?}", other_error)
         }
@@ -45,9 +45,9 @@ fn latest_version(user_version: String) -> String {
     let values: ServingValues = toml::from_str(&values_file).unwrap();
     
     if user_version == values.latest_version {
-        return format!("Latest version: {}. You're running the latest version!", values.latest_version)
+        return format!("{}. You're running the latest version!", values.latest_version)
     } else {
-        return format!("Latest version: {}. You're running {}. Consider updating modpack.", values.latest_version, user_version)
+        return format!("{}. You're running {}. Consider updating modpack.", values.latest_version, user_version)
     }
     
 }
