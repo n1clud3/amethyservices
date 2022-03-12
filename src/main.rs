@@ -45,9 +45,9 @@ fn latest_version(user_version: String) -> String {
     let values: ServingValues = toml::from_str(&values_file).unwrap();
     
     if user_version == values.latest_version {
-        return format!("{}. You're running the latest version!", values.latest_version)
+        return format!("{}", values.latest_version)
     } else {
-        return format!("{}. You're running {}. Consider updating modpack.", values.latest_version, user_version)
+        return format!("{}. Consider updating client!", values.latest_version, user_version)
     }
     
 }
